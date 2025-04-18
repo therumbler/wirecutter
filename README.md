@@ -6,8 +6,8 @@ It uses Python, FastAPI and AlpineJS for the webpage.
 
 ## Requirements
 
-[Python 3](https://python.org)
-[uv](https://pypi.org/project/uv/)
+- [Python 3](https://python.org)
+- [uv](https://pypi.org/project/uv/)
 
 ## How to
 
