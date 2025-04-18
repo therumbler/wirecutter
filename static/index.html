@@ -1,0 +1,51 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wirecutter Search</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.3/dist/cdn.min.js"></script>
+    
+</head>
+<body>
+    <div x-data="wirecutterSearchApp()" class="container" id="app">
+        <header>
+            <h1>Wirecutter Search</h1>
+        </header>
+        <main>
+            <h2 x-show="result" x-text="'Wirecutter results for ' + searchTerm"></h2>
+            <section id="content">
+                <input type="text" x-model="searchTerm" placeholder="Search..." 
+                       @input.debounce.500ms="search()">
+                <button @click="search()">Search</button>
+                <div x-show="loading" class="loading">
+                    <p>Searching...</p>
+                </div>
+                <div id="results" x-show="result">
+                    <template x-for="(item, index) in result.itemListElement" :key="index">
+                        <ul class="result-item">
+                            <h3 x-text="item.item.name"></h3>
+                            <img :src="item.item.image" alt="Image" class="result-image">
+                            <p x-text="item.item.description"></p>
+                            <a :href="item.item.url" target="_blank">Read more...</a>
+                            
+                            <h4>Offers</h4>
+                            <template x-for="(offer, index) in item.item.offers" :key="index">
+                                <li class="offer-item">  
+                                    <span x-text="offer.price"></span>
+                                    <a :href="offer.url" target="_blank">Buy from <span x-text="offer.offeredBy.name"></span></a>
+                                </li>
+                            </template>
+                        </ul>
+                        <hr />
+                    </template>
+                </div>
+            </section>
+        </main>
+        <footer>
+            <p>&copy; rmbldc.com</p>
+        </footer>
+    </div>
+    <script src="/js/wirecutterSearchApp.js"></script>
+</body>
+</html>
