@@ -25,6 +25,7 @@ function wirecutterSearchApp() {
         return;
       }
       this.result = null;
+
       try {
         const response = await fetch(`/api/search/${this.searchTerm}`);
         if (!response.ok) {
@@ -32,6 +33,9 @@ function wirecutterSearchApp() {
         }
         const data = await response.json();
         this.result = data;
+        const url = new URL(window.location);
+        url.searchParams.set("term", this.searchTerm);
+        window.history.pushState({}, "", url);
       } catch (error) {
         console.error("Error fetching search results:", error);
         this.error = "Failed to fetch search results.";
