@@ -5,6 +5,15 @@ function wirecutterSearchApp() {
     loading: false,
     init: function () {
       this.loading = false;
+      this.searchTerm = this.getSearchTermFromUrl();
+      if (this.searchTerm) {
+        this.search();
+      }
+    },
+    getSearchTermFromUrl: function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      console.log("URL Params:", urlParams);
+      return urlParams.get("term") || "";
     },
     async search() {
       this.loading = true;
