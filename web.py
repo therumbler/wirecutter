@@ -5,7 +5,7 @@ import os
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 
-from wirecutter import find_recommendations
+from wirecutter import find_recommendations, search
 
 
 def make_app():
@@ -15,12 +15,23 @@ def make_app():
     async def read_root():
         return FileResponse("./static/index.html")
 
-    @app.get("/api/search/{query}")
-    async def search(query: str):
-        result = find_recommendations(query)
+    @app.get("/api/recommendations/{slug}")
+    async def read_recommendation(slug: str):
+        result = find_recommendations(slug)
         if not result:
             raise HTTPException(status_code=404, detail="Nothing found")
         return result
+
+    @app.get("/api/search/{query}")
+    async def search_endpoint(query: str):
+        result = search(query)
+        if not result:
+            raise HTTPException(status_code=404, detail="Nothing found")
+        return result
+
+    @app.get("/reviews/{_}/")
+    async def reviews(_: str):
+        return FileResponse("./static/index.html")
 
     @app.get("/{file_path:path}")
     async def read_file(file_path: str):

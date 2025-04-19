@@ -45,11 +45,14 @@ def _get_ld_json(html):
 
 
 def _get_html_for_item(item):
-    url = f"https://www.nytimes.com/wirecutter/reviews/best-{item}/"
+
+    url = f"https://www.nytimes.com/wirecutter/reviews/{item}/"
     return _fetch_html(url)
 
 
 def _text_to_slug(text):
+    if not text.startswith("best-"):
+        text = f"best-{text}"
     return text.replace(" ", "-").lower()
 
 
@@ -87,14 +90,35 @@ def find_recommendations(item):
     return ld_json
 
 
+def _get_next_data(html):
+    pattern = r'<script id="__NEXT_DATA__" type="application/json">(.*)</script>'
+    match = re.search(pattern, html.decode())
+    if not match:
+        logger.error("cannot find next_data")
+        return
+    return json.loads(match.group(1))
+
+
+def search(term):
+    url = f"https://www.nytimes.com/wirecutter/search/?s={term}"
+    html = _fetch_html(url)
+    next_data = _get_next_data(html)
+    return next_data
+
+
 def main():
     logging.basicConfig(level="DEBUG")
     item = "cribs"
     # item = "mattress"
     # item = "hybrid-commuter-bike"
     item = "infant car seats"
-    recommendations = find_recommendations(item=item)
-    print(recommendations)
+    # recommendations = find_recommendations(item=item)
+    # print(recommendations)
+    term = "baby"
+    results = search(term)
+    with open("_next_data.json", "w") as f:
+        f.write(json.dumps(results, indent=2))
+    print(results)
 
 
 if __name__ == "__main__":

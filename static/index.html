@@ -13,7 +13,7 @@
             <h1>Wirecutter Search</h1>
         </header>
         <main>
-            <h2 x-show="result" x-text="'Wirecutter results for ' + searchTerm"></h2>
+            <h2 x-show="recommendationResult" x-text="'Wirecutter results for ' + searchTerm"></h2>
             <section id="content">
                 <input type="text" x-model="searchTerm" placeholder="Search..." 
                        @input.debounce.500ms="search()">
@@ -21,8 +21,8 @@
                 <div x-show="loading" class="loading">
                     <p>Searching...</p>
                 </div>
-                <div id="results" x-show="result">
-                    <template x-for="(item, index) in result.itemListElement" :key="index">
+                <div id="results" x-show="recommendationResult">
+                    <template x-for="(item, index) in recommendationResult.itemListElement" :key="index">
                         <ul class="result-item">
                             <h3 x-text="item.item.name"></h3>
                             <img :src="item.item.image" alt="Image" class="result-image">
@@ -40,6 +40,18 @@
                         <hr />
                     </template>
                 </div>
+                <div id="searchResults" x-show="searchResults">
+                    <template x-for="(item, index) in searchResults" :key="index">
+                        <ul class="result-item">
+                            <h3 x-text="item.title"></h3>
+                            <img :src="'https://cdn.thewirecutter.com/' + item.featuredImage.source + '?width=630&quality=60&crop=3:2&auto=webp'" alt="Image" class="result-image">
+                            <p x-text="item.item.description"></p>
+                            <a :href="item.link.replace('https://www.nytimes.com/wirecutter', '')">Read more...</a>
+                            
+                            </ul>
+                            <hr />
+                        </template>
+                    </div>
             </section>
         </main>
         <footer>
