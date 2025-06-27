@@ -29,11 +29,13 @@ def _make_plural(item):
 
 
 def _ld_json_item_list_from_matches(matches):
-    # print(matches)
     for match in matches:
         if match.startswith('{"@type":"ItemList",'):
             return json.loads(match)
-    logger.error("no ItemList found in matches")
+    for match in matches:
+        if match.startswith('{"@context":"http://schema.org","@type":"Product"'):
+            return json.loads(match)
+    logger.error("no match found")
 
 
 def _get_ld_json(html):
@@ -45,14 +47,13 @@ def _get_ld_json(html):
 
 
 def _get_html_for_item(item):
-
     url = f"https://www.nytimes.com/wirecutter/reviews/{item}/"
     return _fetch_html(url)
 
 
 def _text_to_slug(text):
-    if not text.startswith("best-"):
-        text = f"best-{text}"
+    # if not text.startswith("best-"):
+    #     text = f"best-{text}"
     return text.replace(" ", "-").lower()
 
 
@@ -111,9 +112,10 @@ def main():
     item = "cribs"
     # item = "mattress"
     # item = "hybrid-commuter-bike"
-    item = "infant car seats"
-    # recommendations = find_recommendations(item=item)
-    # print(recommendations)
+    item = "keababies-bib-review"
+    recommendations = find_recommendations(item=item)
+    print(recommendations)
+    return
     term = "baby"
     results = search(term)
     with open("_next_data.json", "w") as f:
